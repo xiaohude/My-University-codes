@@ -1,0 +1,9 @@
+MIDlet-1: MyCavasMIDlet,,com.soft.ch3.MyCavasMIDlet
+MIDlet-2: GameMIDlet,,com.soft.game.GameMIDlet
+MIDlet-Jar-Size: 85415
+MIDlet-Jar-URL: ch7.jar
+MIDlet-Name: ch7 Midlet Suite
+MIDlet-Vendor: Midlet Suite Vendor
+MIDlet-Version: 1.0.0
+MicroEdition-Configuration: CLDC-1.1
+MicroEdition-Profile: MIDP-2.0

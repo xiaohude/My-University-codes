@@ -1,0 +1,46 @@
+#include<stdio.h>
+#include<sys/types.h>
+#include<sys/stat.h>
+#include<fcntl.h>
+#include<unistd.h>
+int main(int argc,char *argv[])
+{
+	int sys_open,sys_close;
+	int i;
+	char pathname[]="/work/systemfile";
+	char buff[]="Beginning Linux Programming";
+	char buff1[]="     ";
+	char buff2[]="Third Editon";
+	
+	sys_open=open(pathname,O_CREAT|O_RDWR,00640);
+	if(sys_open==-1)
+	{
+		printf("Source file open error!\n");
+		return -1;
+	}
+	printf("Open file %s succeed!\n",pathname);
+	printf("%d",sizeof(buff));
+	if(write(sys_open,buff,sizeof(buff)-1)!=sizeof(buff)-1)
+	{
+		printf("file write error\n");
+		return 1;
+	}
+	printf("write file succeed!\n");
+		lseek(sys_open,10,SEEK_END);
+		write(sys_open,buff1,sizeof(buff1)-1);	
+	printf("Write file %s five space succeed!\n",pathname);	
+	close(sys_open);
+	printf("Close file %s succeed!\n",pathname);
+
+	sys_open=open(pathname,O_RDWR);
+	lseek(sys_open,0,SEEK_END);
+	printf("Write buff %s \n",buff2);
+	write(sys_open,buff2,sizeof(buff2)-1);
+	close(sys_open);
+	printf("Close file %s succeed!\n",pathname);
+	return 0;		 
+}
+
+
+
+

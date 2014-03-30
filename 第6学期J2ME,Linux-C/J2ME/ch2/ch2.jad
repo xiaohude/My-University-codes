@@ -1,0 +1,18 @@
+MIDlet-1: Test,,com.soft.tet.Test
+MIDlet-10: GaugeMIDlet,,com.soft.gauge.GaugeMIDlet
+MIDlet-11: ItemEventMIDlet,,com.soft.gauge.ItemEventMIDlet
+MIDlet-12: Mian,,com.soft.xiaohu.Mian
+MIDlet-2: UIChangeMIDlet,,com.soft.ui.UIChangeMIDlet
+MIDlet-3: ChangeMIDlet,,com.soft.ui.ChangeMIDlet
+MIDlet-4: ChangeMainMIDlet,,com.soft.change.ChangeMainMIDlet
+MIDlet-5: Main,,com.soft.test.Main
+MIDlet-6: AlertMIDlet,,com.soft.userinterface.AlertMIDlet
+MIDlet-7: ListMIDlet,,com.soft.screen.ListMIDlet
+MIDlet-8: TextBoxMIDLet,,com.soft.screen.TextBoxMIDlet
+MIDlet-9: ItemsMIDlet,,com.soft.item.ItemsMIDlet
+MIDlet-Jar-URL: ch2.jar
+MIDlet-Name: ch2 Midlet Suite
+MIDlet-Vendor: Midlet Suite Vendor
+MIDlet-Version: 1.0.0
+MicroEdition-Configuration: CLDC-1.1
+MicroEdition-Profile: MIDP-2.0

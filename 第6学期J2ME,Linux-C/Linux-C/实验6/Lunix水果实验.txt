@@ -1,0 +1,156 @@
+#include<sys/types.h>
+#include<sys/ipc.h>
+#include<sys/sem.h>
+#include<stdio.h>
+#include<stdlib.h>
+#include<unistd.h>
+
+int P(int sid,int i);
+int V(int sid,int i);
+int father(int sid);
+int mather(int sid);
+int son(int sid);
+int daughter(int sid);
+int sid;
+int main(int argc,char* argv[])
+{
+	//int sid;
+	int id;
+	int time;
+		
+	sid=semget((key_t)12345,3,IPC_CREAT|0666);
+
+	if(semctl(sid,0,SETVAL,0)==-1)printf("错误！！！\n");//苹果
+	semctl(sid,1,SETVAL,0);//橘子
+	semctl(sid,2,SETVAL,3);//盘子空余数	
+
+	printf("初始化：%d苹果值为：%d\n",sid,semctl(sid,0,GETVAL));
+	printf("初始化：%d橘子值为：%d\n",sid,semctl(sid,1,GETVAL));
+	printf("初始化：%d盘子值为：%d\n",sid,semctl(sid,2,GETVAL));
+
+	
+	if((id=fork())==0)
+	{
+		//sid=semget((key_t)12345,0,IPC_CREAT|0666);
+		//printf("老爸进程开始\n");
+		while(1)
+		{	
+			father(sid);
+			time=rand()%2;
+			sleep(time);
+		}
+	}
+	else if((id=fork())==0)
+	{
+		//sid=semget((key_t)12345,0,IPC_CREAT|0666);
+		//printf("老妈进程开始\n");
+		while(1)
+		{	
+			mather(sid);
+			time=rand()%2;
+			sleep(time);
+		}
+	}
+	else if((id=fork())==0)
+	{
+		//sid=semget((key_t)12345,0,IPC_CREAT|0666);
+		//printf("儿子进程开始\n");
+		while(1)
+		{	
+			son(sid);
+			time=rand()%2;
+			sleep(time);
+		}
+	}
+	else if((id=fork())==0)
+	{
+		//sid=semget((key_t)12345,0,IPC_CREAT|0666);
+		//printf("女儿进程开始\n");
+		while(1)
+		{	
+			daughter(sid);
+			time=rand()%2;
+			sleep(time);
+		}
+	}
+	else	
+	{
+
+		printf("建立信号量进程开始！！！\n");
+		
+		while(1)
+		{
+		
+		printf("\n父进程：%d苹果值为：%d\n",sid,semctl(sid,0,GETVAL));
+		printf("父进程：%d橘子值为：%d\n",sid,semctl(sid,1,GETVAL));
+		printf("父进程：%d盘子值为：%d\n\n",sid,semctl(sid,2,GETVAL));
+		sleep(1);
+		}
+	}
+	
+
+	
+	return 0;
+}
+int father(int sid)
+{
+	P(sid,2);
+		printf("老爸放了一个苹果\n");
+	V(sid,0);
+	return 1;
+}
+int mather(int sid)
+{
+	P(sid,2);
+		printf("老妈放了一个橘子\n");
+	V(sid,1);
+	return 1;
+}
+int son(int sid)
+{
+	P(sid,0);
+		
+		
+		printf("儿子吃了一个苹果\n");
+		printf("苹果值为：%d\n",semctl(sid,0,GETVAL));
+	V(sid,2);
+	return 1;
+}
+int daughter(int sid)
+{
+	P(sid,1);
+		
+		printf("女儿吃了一个橘子\n");
+		printf("橘子值为：%d\n",semctl(sid,1,GETVAL));
+	V(sid,2);
+	return 1;
+}
+
+int P(int sid,int i)///i为第几个信号量
+{
+	struct sembuf sb;
+	sb.sem_num=i;
+	sb.sem_op=-1;
+	sb.sem_flg=SEM_UNDO;
+	
+	if(semop(sid,&sb,1)==-1)printf("semop()函数运行错误\n");
+
+	return 1;
+}
+int V(int sid,int i)
+{
+	struct sembuf sb;
+
+	sb.sem_num=i;
+	sb.sem_op=1;
+	sb.sem_flg=SEM_UNDO;
+	
+	if(semop(sid,&sb,1)==-1)printf("semop()函数运行错误\n");
+
+	return 1;
+}
+
+
+
+
+

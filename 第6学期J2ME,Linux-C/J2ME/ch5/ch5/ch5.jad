@@ -1,0 +1,12 @@
+MIDlet-1: HTTPMIDlet,,com.soft.http.HTTPMIDlet
+MIDlet-2: HTTPGetMIDlet,,com.soft.http.HTTPGetMIDlet
+MIDlet-3: SocketServerMIDlet,,com.soft.socket.SocketServerMIDlet
+MIDlet-4: ChatServerMIDlet,,com.soft.socket.chat.ChatServerMIDlet
+MIDlet-5: ChatClientMIDlet,,com.soft.socket.chat.ChatClientMIDlet
+MIDlet-6: SocketClientMIDlet,,com.soft.socket.SocketClientMIDlet
+MIDlet-Jar-URL: ch5.jar
+MIDlet-Name: ch5 Midlet Suite
+MIDlet-Vendor: Midlet Suite Vendor
+MIDlet-Version: 1.0.0
+MicroEdition-Configuration: CLDC-1.1
+MicroEdition-Profile: MIDP-2.0

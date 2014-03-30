@@ -1,0 +1,35 @@
+#include <unistd.h>
+#include <stdlib.h>   
+#include <stdio.h>
+#include <string.h>
+#include <fcntl.h>
+#include <limits.h>
+#include <sys/types.h>
+#include <sys/stat.h>
+#include<linux/stat.h>
+
+
+#define FIFO "./my_fifo"
+#define FIFO2 "./my_fifo2"
+
+int main(int argc, char *argv[])
+{
+	FILE *fp;
+	if((fp=fopen(FIFO,"r"))==NULL)
+	{	
+		umask(0);
+		mknod(FIFO,S_IFIFO|0666,0);///新建管道FIFO
+	}
+	else 
+		fclose(fp);
+
+	if((fp=fopen(FIFO2,"r"))==NULL)
+	{	
+		umask(0);
+		mknod(FIFO2,S_IFIFO|0666,0);///新建管道FIFO2
+	}
+	else 
+		fclose(fp);
+	
+	return 0;
+}

@@ -1,0 +1,83 @@
+#include <stdio.h>
+#include <string.h>
+#include <fcntl.h>
+#include <limits.h>
+#include <sys/types.h>
+#include <sys/stat.h>
+#include<linux/stat.h>
+
+#define FIFO "./my_fifo"
+#define FIFO2 "./my_fifo2"
+
+int main(int argc, char *argv[])
+{
+	FILE *fp;
+	FILE *fp2;
+	char readbuf[40];
+	char writebuf[40];
+	
+	
+	if((fp2=fopen(FIFO2,"w"))==NULL)
+	{
+		printf("open fifo2 failed\n");
+		exit(1);
+	}	
+	fclose(fp2);
+
+
+
+
+
+	pid_t pid;
+	//创建子进程	
+	if((pid=fork())==-1)
+	{
+		printf("fork error");
+	}
+	else if(pid==0)//在子进程中接收数据
+	{
+		while(1)
+		{
+			if((fp=fopen(FIFO,"r"))==NULL)
+			{
+				printf("open fifl failed.\n");
+				exit(1);
+			}
+			if(fgets(readbuf,40,fp)!=NULL)
+			{
+				printf("QQ-1 说: %s \n",readbuf);
+				fclose(fp);
+			}
+			else
+			{	
+				if(ferror(fp))
+				{
+					printf("read fifo failed.\n");
+					exit(1);
+				}
+			}
+		}
+				
+	}	
+	else//在父进程中发送数据
+	{
+		while(1)
+		{	
+			fp2=fopen(FIFO2,"w");
+			scanf("%s",writebuf);
+			//if(argv[1]=="bye"){fclose(fp);break;}
+			if((fputs(writebuf,fp2)==EOF)|(fputs(" ",fp2)==EOF))
+			{	
+				printf("write fifo2 error.\n");
+				exit(1);
+			}
+			sleep(1);
+			fclose(fp2);
+			sleep(1);/*这里需要让进程停止一下，要不然接收方来不及接收就又被发送方打开来，就不会出现及时的接收效果。*/
+		}
+		
+	}
+
+	
+	return 0;
+}

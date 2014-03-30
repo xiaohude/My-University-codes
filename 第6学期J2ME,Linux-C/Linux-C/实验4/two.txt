@@ -1,0 +1,43 @@
+#include<stdio.h>
+int main(int argc,char *argv[])
+{
+	FILE *a=NULL;
+	FILE *b=NULL;
+	FILE *c=NULL;
+	char ch;
+	if(argc<=1)
+	{
+		printf("check usage of %s \n", argv[0]);
+		return -1;
+	}
+	a=fopen(argv[1],"r");
+	if(NULL==a)
+	{
+		printf("Can not open a!\n");
+		return -1;
+	}
+	b=fopen(argv[2],"w");
+	if(NULL==b)
+	{
+		printf("Can not open b!\n");
+		return -1;
+	}
+	c=fopen(argv[3],"a");
+	if(NULL==c)
+	{
+		printf("Can not open c!\n");
+		return -1;
+	}
+	ch=fgetc(a);
+	while(EOF!=ch)
+	{
+		
+		fputc(ch,b);
+		fputc(ch,c);
+		ch=fgetc(a);
+	}
+	fclose(a);fclose(b);fclose(c);
+	
+
+	
+}

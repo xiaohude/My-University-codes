@@ -1,0 +1,78 @@
+#include "2440addr.h"
+#include "2440lib.h"
+
+
+
+void delay(void) 
+{ 
+ int i; 
+  for(i=0; i<20000000; i++); 
+} 
+
+void led_init(void)
+{
+	rGPFCON &= ~( (3<<8)|(3<<10)|(3<<12)|(3<<14)); 
+  	rGPFCON |= ( (1<<8)|(1<<10)|(1<<12)|(1<<14)); 
+ 	 rGPFUP &= 0x0F; 
+  	rGPFDAT |= 0xFF; // 初始灯全灭 
+}
+
+
+
+void __irq timer4_isr(void);
+
+//初始化函数
+void timer4_init()
+{
+	//引脚功能初始化
+//	rGPBCON &= ~(3<<0);/////这三个语句是用来控制蜂鸣器响的。
+//	rGPBCON |= (2<<0);
+//	rGPGUP |= (1<<0);
+	//清除中断相关寄存器
+	rSRCPND |= (1<<14);//可以通过写入一个数据到此寄存器来清除SRCPND 寄存器的指定位。其只清除那些数据中被设置为 1 的相应位置的SRCPND位。那些数据中被设置为0 的相应位置的位保持不变。
+	rINTPND |= (1<<14);//。可以通过写入数据到此寄存器中来清除 INTPND 寄存器的指定位。只会清除数据中设置为 1 的相应 INTPND 寄存器位的位置。数据中设置为0 的相应位的位置则保持不变。
+	//选择中断屏蔽
+	rINTMSK &= ~(1<<14);
+	//安装中断处理函数
+	pISR_TIMER4 = (unsigned int)timer4_isr;
+	//设置分频参数
+	rTCFG0 &= ~(255<<8);
+	rTCFG0 |= (249<<8);///////////计算过程：频率=50000000/(249+1)/4=50000,所以选择二级分频，计数初值为50000
+	rTCFG1 &= ~( (15<<20) | (15<<16) );
+	rTCFG1 |= (1<<16);
+	//设置计数初值
+	rTCNTB4 = 50000;
+	//加载计数
+	rTCON |= (1<<21);
+	rTCON &= ~(1<<21);//上一步设置了更新 TCNTB4 。但是不能一直让这一位为1，否则就一直更新了。所以这再改回来。
+	rTCON |= (1<<22);/////1 = 间隙模式（自动重载）
+	//开始定时器Timer4
+	rTCON |= (1<<20);
+}
+
+unsigned char led = 0;
+//timer4中断
+void __irq timer4_isr(void)
+{
+
+	led=led%4;
+	rGPFDAT |= 0xFF;
+	rGPFDAT &=~(1<<(4+led));
+	led++;				
+	rSRCPND |= (1<<14);
+	rINTPND |= (1<<14);
+		
+}
+
+
+void Main(void)
+{	
+	//初始化串口0以方便调试
+	Uart0_Init_all();
+	//调用初始化程序
+	led_init();
+	timer4_init();
+
+	while(1)
+	{}
+}
